@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shine {
+    animation: shine 2s linear infinite;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate3d(1, 1, 1, 0deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate3d(1, 1, 1, 2deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate3d(1, 1, 1, 0deg);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
