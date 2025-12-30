@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -8,7 +9,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb+srv://admin:piyush93302@cluster0.min2wuc.mongodb.net/students');
+mongoose.connect(process.env.MONGO_URL);
 const db = mongoose.connection;
 db.once('open', () => console.log('Mongoose connection successful'));
 
