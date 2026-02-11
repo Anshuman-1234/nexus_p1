@@ -10,7 +10,16 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dayjs": "^1.11.19",
+    "dotenv": "^17.2.4",
+    "ejs": "^4.0.1",
     "express": "^5.2.1",
-    "mongoose": "^9.0.2"
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
+    "mongoose": "^9.0.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.0",
+    "razorpay": "^2.9.6"
   }
 }
