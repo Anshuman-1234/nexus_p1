@@ -549,4 +549,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../Frontend/index.html'));
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+}
+
+module.exports = app;
