@@ -118,11 +118,11 @@ app.post('/login', async (req, res) => {
             user = await Users.findOne({ role: 'student', regno: regNo, password });
             if (!user) return res.status(401).json({ error: 'Invalid student credentials' });
         } else if (role === 'librarian') {
-            if (librarianPassword !== "1") return res.status(401).json({ error: 'Invalid librarian credentials' });
+            if (librarianPassword !== "@iter") return res.status(401).json({ error: 'Invalid librarian credentials' });
             // For librarian, we might just return a mock user or check a DB record if one exists
             user = { role: 'librarian', name: 'Librarian', regno: 'LIB001' };
         } else if (role === 'admin') {
-            if (adminPassword !== "1") return res.status(401).json({ error: 'Invalid admin credentials' });
+            if (adminPassword !== "@iter") return res.status(401).json({ error: 'Invalid admin credentials' });
             user = { role: 'admin', name: 'Admin', regno: 'ADM001' };
         } else {
             return res.status(400).json({ error: 'Invalid role' });
