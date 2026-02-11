@@ -12,14 +12,12 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const app = express();
 const port = 3000;
 
-// Catch unhandled rejections and exceptions to prevent silent crashes
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
-    // Give time to log before exit
     setTimeout(() => process.exit(1), 1000);
 });
 
@@ -27,18 +25,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Logger
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
 });
 
-// --- Database Connection ---
 mongoose.connect('mongodb+srv://admin:piyush93302@cluster0.min2wuc.mongodb.net/students')
     .then(() => console.log('Mongoose connection successful'))
     .catch(err => console.error('Mongoose connection error:', err));
 
-// --- Schemas & Models ---
 const bookSchema = new mongoose.Schema({
     title: String,
     author: String,
@@ -71,7 +66,6 @@ const userSchema = new mongoose.Schema({
 const Users = mongoose.model('Users', userSchema);
 const Books = mongoose.model('Books', bookSchema);
 
-// --- Email Config ---
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -94,21 +88,13 @@ const sendEmail = async (to, subject, text) => {
     }
 };
 
-// --- Razorpay Config ---
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// --- Static Files ---
 app.use(express.static(path.join(__dirname, '../Frontend')));
 
-// --- Middlewares ---
-// Simple mock auth middleware could be added, but relying on frontend sending data for now
-
-// --- Routes ---
-
-// Login
 app.post('/login', async (req, res) => {
     try {
         const { role, regNo, password, librarianPassword, adminPassword } = req.body;
@@ -118,11 +104,10 @@ app.post('/login', async (req, res) => {
             user = await Users.findOne({ role: 'student', regno: regNo, password });
             if (!user) return res.status(401).json({ error: 'Invalid student credentials' });
         } else if (role === 'librarian') {
-            if (librarianPassword !== "@iter") return res.status(401).json({ error: 'Invalid librarian credentials' });
-            // For librarian, we might just return a mock user or check a DB record if one exists
+            if (librarianPassword !== "1") return res.status(401).json({ error: 'Invalid librarian credentials' });
             user = { role: 'librarian', name: 'Librarian', regno: 'LIB001' };
         } else if (role === 'admin') {
-            if (adminPassword !== "@iter") return res.status(401).json({ error: 'Invalid admin credentials' });
+            if (adminPassword !== "1") return res.status(401).json({ error: 'Invalid admin credentials' });
             user = { role: 'admin', name: 'Admin', regno: 'ADM001' };
         } else {
             return res.status(400).json({ error: 'Invalid role' });
@@ -137,7 +122,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Get User Profile (Student)
 app.get('/api/student/:regno', async (req, res) => {
     try {
         const user = await Users.findOne({ regno: req.params.regno });
@@ -172,14 +156,11 @@ app.get('/api/student/:regno', async (req, res) => {
     }
 });
 
-// Dashboard Stats (Librarian/Admin)
 app.get('/api/dashboard-stats', async (req, res) => {
     try {
         const studentCount = await Users.countDocuments({ role: 'student' });
         const bookCount = await Books.countDocuments();
 
-        // Count total active issued books across all users
-        // This is expensive in this schema structure, but okay for small scale
         const users = await Users.find({ role: 'student' });
         let activeIssues = 0;
         users.forEach(u => {
@@ -192,7 +173,6 @@ app.get('/api/dashboard-stats', async (req, res) => {
     }
 });
 
-// Get All Books (Explore)
 app.get('/api/books', async (req, res) => {
     try {
         const books = await Books.find();
@@ -202,7 +182,6 @@ app.get('/api/books', async (req, res) => {
     }
 });
 
-// Get All Students (Librarian/Admin)
 app.get('/api/all-students', async (req, res) => {
     try {
         const students = await Users.find({ role: 'student' });
@@ -212,7 +191,6 @@ app.get('/api/all-students', async (req, res) => {
     }
 });
 
-// Add New Student (Librarian/Admin)
 app.post('/api/students', async (req, res) => {
     try {
         const { name, regno, email, password } = req.body;
@@ -224,7 +202,7 @@ app.post('/api/students', async (req, res) => {
             name,
             regno,
             email,
-            password, // In a real app, hash this!
+            password,
             role: 'student',
             booksIssued: []
         });
@@ -236,14 +214,12 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
-// Delete Student (Librarian/Admin)
 app.delete('/api/students/:regno', async (req, res) => {
     try {
         const { regno } = req.params;
         const student = await Users.findOne({ regno, role: 'student' });
         if (!student) return res.status(404).json({ error: 'Student not found' });
 
-        // Remove student
         await Users.findOneAndDelete({ regno, role: 'student' });
         res.json({ success: true, message: 'Student deleted successfully' });
     } catch (err) {
@@ -251,13 +227,11 @@ app.delete('/api/students/:regno', async (req, res) => {
     }
 });
 
-// Update Student (Librarian/Admin)
 app.put('/api/students/:regno', async (req, res) => {
     try {
         const { regno } = req.params;
         const { name, email, password, newRegno } = req.body;
 
-        // If changing regno, check if newRegno already taken
         if (newRegno && newRegno !== regno) {
             const exists = await Users.findOne({ regno: newRegno });
             if (exists) return res.status(400).json({ error: 'New Registration Number is already taken' });
@@ -276,7 +250,6 @@ app.put('/api/students/:regno', async (req, res) => {
     }
 });
 
-// Add New Book (Librarian/Admin)
 app.post('/api/books', async (req, res) => {
     try {
         const { title, author, isbn, category, totalCopies, coverImage } = req.body;
@@ -298,7 +271,6 @@ app.post('/api/books', async (req, res) => {
     }
 });
 
-// Delete Book (Librarian/Admin)
 app.delete('/api/books/:id', async (req, res) => {
     try {
         await Books.findByIdAndDelete(req.params.id);
@@ -308,7 +280,6 @@ app.delete('/api/books/:id', async (req, res) => {
     }
 });
 
-// Issue Book (Librarian)
 app.post('/api/issue', async (req, res) => {
     try {
         const { regno, bookId, customDueDate } = req.body;
@@ -316,7 +287,6 @@ app.post('/api/issue', async (req, res) => {
         const user = await Users.findOne({ regno });
         if (!user) return res.status(404).json({ error: 'Student not found' });
 
-        // Check if student has unpaid fines or overdue books
         const hasUnpaidFines = user.booksIssued.some(b => b.fine > 0 && !b.finePaid);
         if (hasUnpaidFines) {
             return res.status(400).json({ error: 'Student has unpaid fines. Cannot issue new book.' });
@@ -328,7 +298,6 @@ app.post('/api/issue', async (req, res) => {
         }
 
         const issueDate = new Date();
-        // Use customDueDate if provided, else default to 14 days
         const dueDate = customDueDate ? new Date(customDueDate) : dayjs().add(14, 'day').toDate();
 
         user.booksIssued.push({
@@ -345,7 +314,6 @@ app.post('/api/issue', async (req, res) => {
         await book.save();
         await user.save();
 
-        // Send Email
         const emailText = `Dear ${user.name},
 
 This email serves as an official confirmation that the book titled "${book.title}" has been successfully issued to you.
@@ -367,7 +335,6 @@ Library Administration`;
     }
 });
 
-// Return Book (Librarian)
 app.post('/api/return', async (req, res) => {
     try {
         const { regno, bookIssueId } = req.body;
@@ -380,18 +347,15 @@ app.post('/api/return', async (req, res) => {
         issuedBook.status = 'Returned';
         issuedBook.returnDate = new Date();
 
-        // Finalize fine calculation
         const due = dayjs(issuedBook.dueDate);
         const returned = dayjs(issuedBook.returnDate);
         if (returned.isAfter(due)) {
             const diff = returned.diff(due, 'day');
-            issuedBook.fine = diff * 2; // Updated: 2 Rs per day fine
+            issuedBook.fine = diff * 2;
         }
 
         const book = await Books.findById(issuedBook.bookId);
         if (book) {
-            // Only increment available copies if there is NO fine.
-            // If there IS a fine, we wait for payment before restoring stock.
             if (issuedBook.fine <= 0) {
                 book.availableCopies += 1;
                 await book.save();
@@ -405,12 +369,11 @@ app.post('/api/return', async (req, res) => {
     }
 });
 
-// Create Payment Order (Student)
 app.post('/api/create-order', async (req, res) => {
     try {
         const { amount } = req.body;
         const options = {
-            amount: amount * 100, // amount in paise
+            amount: amount * 100,
             currency: "INR",
             receipt: "receipt_" + Date.now()
         };
@@ -423,12 +386,10 @@ app.post('/api/create-order', async (req, res) => {
     }
 });
 
-// Verify Payment (Student)
 app.post('/api/verify-payment', async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, regno } = req.body;
 
-        // Verify signature
         const body = razorpay_order_id + "|" + razorpay_payment_id;
         const expectedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -437,7 +398,6 @@ app.post('/api/verify-payment', async (req, res) => {
 
         if (expectedSignature === razorpay_signature) {
             console.log("Payment signature verified successfully");
-            // Update user fines and mark books as returned if they were still issued
             const user = await Users.findOne({ regno });
             if (user) {
                 let totalPaid = 0;
@@ -446,8 +406,6 @@ app.post('/api/verify-payment', async (req, res) => {
                         totalPaid += b.fine;
                         b.finePaid = true;
 
-                        // Increment stock because it wasn't incremented during 'Return' (due to fine)
-                        // or because it's being auto-returned now.
                         const book = await Books.findById(b.bookId);
                         if (book) {
                             book.availableCopies += 1;
@@ -463,7 +421,6 @@ app.post('/api/verify-payment', async (req, res) => {
 
                 await user.save();
 
-                // Send Confirmation Email
                 if (user.email && totalPaid > 0) {
                     sendEmail(
                         user.email,
@@ -493,8 +450,7 @@ Library Administration`
     }
 });
 
-// --- Cron Job for Reminders ---
-cron.schedule("*/10 * * * *", async () => { // Check every 10 minutes to avoid resource flooding
+cron.schedule("*/10 * * * *", async () => {
     try {
         console.log("Checking for overdue books...");
         const users = await Users.find({ "booksIssued.status": "Issued" });
@@ -507,7 +463,6 @@ cron.schedule("*/10 * * * *", async () => { // Check every 10 minutes to avoid r
 
                 const due = dayjs(book.dueDate);
 
-                // Immediate Overdue Trigger (Once)
                 if (today.isAfter(due) && !book.overdueEmailSent) {
                     if (user.email) {
                         await sendEmail(
@@ -538,8 +493,6 @@ Library Administration`
     }
 });
 
-
-// 404 Handler for API
 app.use('/api', (req, res) => {
     console.log(`404 API - ${req.method} ${req.url}`);
     res.status(404).json({ error: 'API route not found' });
