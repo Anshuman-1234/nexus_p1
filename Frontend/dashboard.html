@@ -774,6 +774,147 @@
             letter-spacing: 1px;
             font-weight: 600;
         }
+
+        /* Profile Modal Styles */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .profile-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            color: var(--text-color);
+        }
+
+        .profile-modal-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .profile-modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .profile-modal-header p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-pic-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            background: #f1f5f9;
+        }
+
+        .edit-pic-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--primary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: 0.2s;
+        }
+
+        .edit-pic-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 60, 109, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(26, 60, 109, 0.3);
+        }
+
+        .user-profile {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -867,7 +1008,7 @@
                     <i class="fas fa-file-pdf"></i>
                     <span>Give Report</span>
                 </button>
-                <div class="user-profile">
+                <div class="user-profile" onclick="openProfileModal()">
                     <div class="user-info">
                         <div class="user-name" id="profileName">Student User</div>
                         <div class="user-role" id="profileReg">Reg: --</div>
@@ -987,6 +1128,89 @@
 
     </main>
 
+    <!-- Theme Store Modal -->
+    <div id="themeStoreModal" class="theme-store-modal">
+        <div class="theme-store-content">
+            <div class="theme-store-header">
+                <div>
+                    <p
+                        style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 8px;">
+                        Personalize Your Experience</p>
+                    <h2>Theme Store</h2>
+                </div>
+                <i class="fas fa-times close-store" onclick="closeThemeStore()"></i>
+            </div>
+
+            <div class="theme-filters">
+                <button class="filter-btn active" onclick="filterThemes('all', this)"><i class="fas fa-sparkles"></i>
+                    All Themes</button>
+                <button class="filter-btn" onclick="filterThemes('nature', this)"><i class="fas fa-leaf"></i>
+                    Nature</button>
+                <button class="filter-btn" onclick="filterThemes('executive', this)"><i class="fas fa-briefcase"></i>
+                    Executive</button>
+                <button class="filter-btn" onclick="filterThemes('minimalist', this)"><i class="fas fa-ghost"></i>
+                    Minimalist</button>
+                <button class="filter-btn" onclick="filterThemes('modern', this)"><i class="fas fa-palette"></i>
+                    Modern</button>
+            </div>
+
+            <div class="theme-grid-premium" id="themeGridPremium">
+                <!-- Themes will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <i class="fas fa-times close-store" style="position: absolute; top: 20px; right: 20px;"
+                onclick="closeProfileModal()"></i>
+            <div class="profile-modal-header">
+                <h2>Account Settings</h2>
+                <p>Manage your profile information</p>
+            </div>
+
+            <form id="profileUpdateForm">
+                <div class="profile-pic-container">
+                    <img id="modalProfilePic" src="https://ui-avatars.com/api/?name=User&background=random"
+                        class="profile-pic-preview" alt="Profile">
+                    <label for="profilePicInput" class="edit-pic-btn">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="profilePicInput" hidden accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="modalName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="modalEmail" class="form-control" required>
+                </div>
+
+                <div style="margin: 25px 0 15px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 15px; color: var(--primary-color);">Change Password</h3>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="prevPassword" class="form-control"
+                        placeholder="Required to change password">
+                </div>
+
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" class="form-control"
+                        placeholder="Leave blank to keep current">
+                </div>
+
+                <button type="submit" class="submit-btn" id="updateProfileBtn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script>
         const baseUrl = '';
@@ -1038,10 +1262,11 @@
 
         // Check Auth
         const userData = localStorage.getItem('user');
-        if (!userData) {
+        if (!userData || userData === 'undefined' || userData === 'null') {
             window.location.href = 'index.html';
         }
         const user = JSON.parse(userData);
+        if (!user) window.location.href = 'index.html';
         userReg = user.regno;
         userEmail = user.email || 'student@example.com';
 
@@ -1079,38 +1304,45 @@
 
         function renderDashboard(user, totalFine) {
             // Profile
-            document.getElementById('profileName').textContent = user.name;
-            document.getElementById('profileReg').textContent = `Reg: ${user.regno}`;
+            document.getElementById('profileName').textContent = user.name || 'Student';
+            document.getElementById('profileReg').textContent = `Reg: ${user.regno || '--'}`;
             document.getElementById('profileEmail').textContent = user.email || '--';
-            document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
 
-            userFine = totalFine;
+            const avatar = document.getElementById('profileAvatar');
+            if (user.profilePic) {
+                avatar.innerHTML = `<img src="${user.profilePic}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                avatar.textContent = (user.name || 'S').charAt(0).toUpperCase();
+            }
+
+            userFine = totalFine || 0;
+            const books = user.booksIssued || [];
 
             // Stats
-            const borrowed = user.booksIssued.filter(b => b.status === 'Issued').length;
-            // Count as "Returned" only if it's physically returned AND fine is settled (as per user request)
-            const returned = user.booksIssued.filter(b => b.status === 'Returned' && (b.fine === 0 || b.finePaid === true)).length;
-            const overdue = user.booksIssued.filter(b => b.status === 'Issued' && dayjs().isAfter(dayjs(b.dueDate))).length;
-            const totalRecords = user.booksIssued.length;
+            const borrowed = books.filter(b => b.status === 'Issued').length;
+            const returned = books.filter(b => b.status === 'Returned' && (b.fine === 0 || b.finePaid === true)).length;
+            const overdue = books.filter(b => b.status === 'Issued' && dayjs().isAfter(dayjs(b.dueDate))).length;
+            const totalRecords = books.length;
 
             document.getElementById('statBorrowed').textContent = borrowed;
             document.getElementById('statReturned').textContent = returned;
             document.getElementById('statOverdue').textContent = overdue;
-            document.getElementById('statFine').textContent = `₹${totalFine}`;
+            document.getElementById('statFine').textContent = `₹${userFine}`;
             document.getElementById('statTotal').textContent = totalRecords;
 
             // Fines Section Visibility
-            if (totalFine > 0) {
-                document.getElementById('fines').style.display = 'block';
-                document.getElementById('fineAmountDisplay').textContent = `₹${totalFine}`;
+            const fineSection = document.getElementById('fines');
+            if (userFine > 0) {
+                fineSection.style.display = 'block';
+                document.getElementById('fineAmountDisplay').textContent = `₹${userFine}`;
             } else {
-                document.getElementById('fines').style.display = 'none';
+                fineSection.style.display = 'none';
             }
 
             // Issued Books Table
             const tbody = document.getElementById('issuedTableBody');
             tbody.innerHTML = '';
-            user.booksIssued.forEach(book => {
+            books.forEach(book => {
                 const tr = document.createElement('tr');
                 const isOverdue = dayjs().isAfter(dayjs(book.dueDate));
                 const statusClass = book.status === 'Returned' ? 'badge-returned' : (isOverdue ? 'badge-overdue' : 'badge-issued');
@@ -1146,17 +1378,25 @@
                 return;
             }
 
-            books.forEach(book => {
+            const emojis = ['📚', '📖', '📕', '📗', '📘', '📙', '📓', '📒', '📜', '📑'];
+
+            books.forEach((book, index) => {
                 const div = document.createElement('div');
-                div.className = 'book-card';
+                div.className = 'book-card fade-in';
+                div.style.animationDelay = `${index * 0.05}s`;
+
+                // Get a consistent emoji for this book based on its title
+                const emojiIdx = Math.abs(book.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % emojis.length;
+                const bookEmoji = emojis[emojiIdx];
+
                 div.innerHTML = `
-                    <div class="book-cover" style="${book.coverImage ? `background-image: url('${book.coverImage}'); background-size: cover; background-position: center;` : ''}">
-                        ${!book.coverImage ? '<i class="fas fa-book" style="font-size: 2rem; opacity: 0.2;"></i>' : ''}
+                    <div class="book-cover" style="${book.coverImage ? `background-image: url('${book.coverImage}'); background-size: cover; background-position: center;` : 'display: flex; align-items: center; justify-content: center; font-size: 3.5rem; background: #f8fafc;'}">
+                        ${!book.coverImage ? bookEmoji : ''}
                     </div>
-                    <div class="book-title" title="${book.title}">${book.title}</div>
-                    <div class="book-author">${book.author || '--'}</div>
-                    <div style="font-size: 0.75rem; color: ${book.availableCopies > 0 ? 'var(--success-color)' : 'var(--danger-color)'}; margin-top: 5px;">
-                        ${book.availableCopies > 0 ? `${book.availableCopies} available` : 'Out of Stock'}
+                    <div class="book-title" title="${book.title}">${bookEmoji} ${book.title}</div>
+                    <div class="book-author">✍️ ${book.author || '--'}</div>
+                    <div style="font-size: 0.75rem; font-weight: 600; color: ${book.availableCopies > 0 ? 'var(--success-color)' : 'var(--danger-color)'}; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                        ${book.availableCopies > 0 ? `<span>✅ ${book.availableCopies} available</span>` : '<span>❌ Out of Stock</span>'}
                     </div>
                 `;
                 grid.appendChild(div);
@@ -1317,43 +1557,6 @@
             doc.save(`SOA_Library_Report_${user.regno}_${dayjs().format('YYYYMMDD')}.pdf`);
         }
 
-        // Initialize
-        fetchUserData();
-        fetchBooks();
-
-    </script>
-    <!-- Theme Store Modal -->
-    <div id="themeStoreModal" class="theme-store-modal">
-        <div class="theme-store-content">
-            <div class="theme-store-header">
-                <div>
-                    <p
-                        style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 8px;">
-                        Personalize Your Experience</p>
-                    <h2>Theme Store</h2>
-                </div>
-                <i class="fas fa-times close-store" onclick="closeThemeStore()"></i>
-            </div>
-
-            <div class="theme-filters">
-                <button class="filter-btn active" onclick="filterThemes('all')"><i class="fas fa-sparkles"></i> All
-                    Themes</button>
-                <button class="filter-btn" onclick="filterThemes('nature')"><i class="fas fa-leaf"></i> Nature</button>
-                <button class="filter-btn" onclick="filterThemes('executive')"><i class="fas fa-briefcase"></i>
-                    Executive</button>
-                <button class="filter-btn" onclick="filterThemes('minimalist')"><i class="fas fa-ghost"></i>
-                    Minimalist</button>
-                <button class="filter-btn" onclick="filterThemes('modern')"><i class="fas fa-palette"></i>
-                    Modern</button>
-            </div>
-
-            <div class="theme-grid-premium" id="themeGridPremium">
-                <!-- Themes will be injected here -->
-            </div>
-        </div>
-    </div>
-
-    <script>
         const themes = [
             { id: 'sage', name: 'Sage (Default)', category: 'nature', primary: '#1a3c6d', secondary: '#10b981', bg: 'dark' },
             { id: 'eucalyptus', name: 'Eucalyptus', category: 'nature', primary: '#2d3e40', secondary: '#899982', bg: 'light' },
@@ -1378,9 +1581,15 @@
             document.body.style.overflow = 'auto';
         }
 
-        function filterThemes(category) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        function filterThemes(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            else {
+                // Find button by text if element not passed
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    if (b.innerText.toLowerCase().includes(category)) b.classList.add('active');
+                });
+            }
             renderThemes(category);
         }
 
@@ -1419,11 +1628,122 @@
             setBackground(theme.bg);
 
             // Re-render to show active state
-            renderThemes(document.querySelector('.filter-btn.active').innerText.split(' ').pop().toLowerCase());
-
-            // Show toast or notification
-            console.log(`Applied theme: ${theme.name}`);
+            const activeCategory = document.querySelector('.filter-btn.active');
+            const category = activeCategory ? (activeCategory.innerText.toLowerCase().includes('all') ? 'all' : activeCategory.innerText.toLowerCase().trim()) : 'all';
+            renderThemes(category.replace('nature', 'nature').replace('executive', 'executive').replace('minimalist', 'minimalist').replace('modern', 'modern'));
+            // Simplified: just render 'all' for now after apply to keep it simple, or better:
+            renderThemes('all');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
         }
+
+        // --- Profile Management Functions ---
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            document.getElementById('modalName').value = document.getElementById('profileName').textContent;
+            document.getElementById('modalEmail').value = document.getElementById('profileEmail').textContent;
+
+            const avatar = document.getElementById('profileAvatar');
+            const preview = document.getElementById('modalProfilePic');
+
+            if (avatar.querySelector('img')) {
+                preview.src = avatar.querySelector('img').src;
+            } else {
+                preview.src = `https://ui-avatars.com/api/?name=${document.getElementById('profileName').textContent}&background=random`;
+            }
+
+            document.getElementById('prevPassword').value = '';
+            document.getElementById('newPassword').value = '';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('profilePicInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                    alert("Image size should be less than 2MB");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('modalProfilePic').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('profileUpdateForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('updateProfileBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Updating...';
+            btn.disabled = true;
+
+            try {
+                const name = document.getElementById('modalName').value;
+                const email = document.getElementById('modalEmail').value;
+                const profilePic = document.getElementById('modalProfilePic').src;
+                const prevPwd = document.getElementById('prevPassword').value;
+                const newPwd = document.getElementById('newPassword').value;
+
+                const profileRes = await fetch(`${baseUrl}/api/student/profile/${userReg}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, profilePic })
+                });
+
+                if (!profileRes.ok) throw new Error("Failed to update profile info");
+
+                if (prevPwd || newPwd) {
+                    if (!prevPwd || !newPwd) {
+                        throw new Error("Both current and new password are required to change password");
+                    }
+                    const pwdRes = await fetch(`${baseUrl}/api/student/change-password/${userReg}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prevPassword: prevPwd, newPassword: newPwd })
+                    });
+
+                    const pwdData = await pwdRes.json();
+                    if (!pwdRes.ok) throw new Error(pwdData.error || "Failed to change password");
+                }
+
+                alert("✅ Profile updated successfully!");
+                const currentLocalUser = JSON.parse(localStorage.getItem('user'));
+                currentLocalUser.name = name;
+                currentLocalUser.email = email;
+                currentLocalUser.profilePic = profilePic; // Sync profile pic
+                localStorage.setItem('user', JSON.stringify(currentLocalUser));
+
+                closeProfileModal();
+                fetchUserData();
+            } catch (err) {
+                console.error("Profile update error:", err);
+                alert("❌ Error: " + err.message);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // Global Error Handling for better debugging
+        window.onerror = function (msg, url, line, col, error) {
+            console.error("Global JS Error: ", msg, " at ", line, ":", col);
+            return false;
+        };
+
+        // Initialize
+        renderDashboard(user, 0); // Fast render from local storage
+        fetchUserData();
+        fetchBooks();
+
     </script>
 </body>
 

@@ -942,34 +942,34 @@
 
         <!-- Add Book Section -->
         <div id="section-add-book" class="form-container">
-            <h3>Add New Book to Inventory</h3>
+            <h3>📚 Add New Book to Inventory</h3>
             <div class="form-grid" style="margin-top: 20px;">
                 <div class="form-group">
-                    <label>Book Title</label>
+                    <label>📖 Book Title</label>
                     <input type="text" id="newBookTitle" placeholder="e.g. Introduction to Algorithms">
                 </div>
                 <div class="form-group">
-                    <label>Author</label>
+                    <label>✍️ Author</label>
                     <input type="text" id="newBookAuthor" placeholder="e.g. Cormen">
                 </div>
                 <div class="form-group">
-                    <label>ISBN</label>
+                    <label>🆔 ISBN</label>
                     <input type="text" id="newBookISBN" placeholder="ISBN-13">
                 </div>
                 <div class="form-group">
-                    <label>Category</label>
+                    <label>📂 Category</label>
                     <input type="text" id="newBookCategory" placeholder="e.g. Computer Science">
                 </div>
                 <div class="form-group">
-                    <label>Total Copies</label>
+                    <label>🔢 Total Copies</label>
                     <input type="number" id="newBookCopies" value="1" min="1">
                 </div>
                 <div class="form-group">
-                    <label>Cover Image URL (Optional)</label>
+                    <label>🔗 Cover Image URL (Optional)</label>
                     <input type="text" id="newBookCover" placeholder="https://...">
                 </div>
             </div>
-            <button class="btn-primary" onclick="addBook()">Add Book</button>
+            <button class="btn-primary" onclick="addBook()">➕ Register Book</button>
         </div>
 
     </main>
@@ -1124,14 +1124,19 @@
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No books in inventory</td></tr>';
                 return;
             }
+            const emojis = ['📚', '📖', '📕', '📗', '📘', '📙', '📓', '📒', '📜', '📑'];
+
             books.forEach(b => {
                 const tr = document.createElement('tr');
+                const emojiIdx = Math.abs(b.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % emojis.length;
+                const bookEmoji = emojis[emojiIdx];
+
                 tr.innerHTML = `
-                    <td>${b.title}</td>
-                    <td>${b.author || '--'}</td>
-                    <td>${b.isbn || '--'}</td>
-                    <td>${b.category || '--'}</td>
-                    <td>${b.availableCopies} / ${b.totalCopies}</td>
+                    <td>${bookEmoji} ${b.title}</td>
+                    <td>✍️ ${b.author || '--'}</td>
+                    <td>🆔 ${b.isbn || '--'}</td>
+                    <td>📂 ${b.category || '--'}</td>
+                    <td>📊 ${b.availableCopies} / ${b.totalCopies}</td>
                     <td><button class="btn-sm" style="background: var(--danger-color); color: white;" onclick="deleteBook('${b._id}')"><i class="fas fa-trash"></i> Delete</button></td>
                 `;
                 tbody.appendChild(tr);
@@ -1405,7 +1410,7 @@
                 });
                 const data = await res.json();
                 if (data.error) throw new Error(data.error);
-                alert("Book Added Successfully!");
+                alert("✅ Book Added Successfully! 📚");
                 // Clear form
                 document.getElementById('newBookTitle').value = '';
                 document.getElementById('newBookAuthor').value = '';

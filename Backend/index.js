@@ -23,8 +23,8 @@ process.on('uncaughtException', (err) => {
     setTimeout(() => process.exit(1), 1000);
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
 
 // Logger
@@ -55,6 +55,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: String,
     email: String,
+    profilePic: String,
     booksIssued: [{
         bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Books' },
         bookTitle: String,
@@ -118,11 +119,11 @@ app.post('/login', async (req, res) => {
             user = await Users.findOne({ role: 'student', regno: regNo, password });
             if (!user) return res.status(401).json({ error: 'Invalid student credentials' });
         } else if (role === 'librarian') {
-            if (librarianPassword !== "1") return res.status(401).json({ error: 'Invalid librarian credentials' });
+            if (librarianPassword !== "@iter") return res.status(401).json({ error: 'Invalid librarian credentials' });
             // For librarian, we might just return a mock user or check a DB record if one exists
             user = { role: 'librarian', name: 'Librarian', regno: 'LIB001' };
         } else if (role === 'admin') {
-            if (adminPassword !== "1") return res.status(401).json({ error: 'Invalid admin credentials' });
+            if (adminPassword !== "@iter") return res.status(401).json({ error: 'Invalid admin credentials' });
             user = { role: 'admin', name: 'Admin', regno: 'ADM001' };
         } else {
             return res.status(400).json({ error: 'Invalid role' });
@@ -271,6 +272,47 @@ app.put('/api/students/:regno', async (req, res) => {
 
         if (!student) return res.status(404).json({ error: 'Student not found' });
         res.json({ success: true, message: 'Student updated successfully', student });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update Student Profile (Self)
+app.put('/api/student/profile/:regno', async (req, res) => {
+    try {
+        const { regno } = req.params;
+        const { name, email, profilePic } = req.body;
+
+        const user = await Users.findOneAndUpdate(
+            { regno, role: 'student' },
+            { name, email, profilePic },
+            { new: true }
+        );
+
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json({ success: true, message: 'Profile updated successfully', user });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Change Password (Student)
+app.put('/api/student/change-password/:regno', async (req, res) => {
+    try {
+        const { regno } = req.params;
+        const { prevPassword, newPassword } = req.body;
+
+        const user = await Users.findOne({ regno, role: 'student' });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        if (user.password !== prevPassword) {
+            return res.status(400).json({ error: 'Incorrect previous password' });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.json({ success: true, message: 'Password changed successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
