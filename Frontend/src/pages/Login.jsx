@@ -66,17 +66,17 @@ const Login = () => {
       </div>
 
       <div
-        className="relative z-10 w-full max-w-[90%] md:max-w-3xl lg:max-w-5xl mx-auto flex flex-col md:flex-row h-auto min-h-[auto] md:min-h-[550px] m-4 md:m-8 rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/10 group transition-all duration-500"
+        className="relative z-10 w-full max-w-[95%] md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col md:flex-row h-auto md:h-[min(650px,90vh)] max-h-[90vh] my-4 md:my-6 rounded-2xl overflow-hidden glass-card shadow-2xl border border-white/10 group transition-all duration-500"
       >
 
-        <div className="w-full md:w-1/2 relative bg-gradient-to-b md:bg-gradient-to-br from-[#16325C]/90 to-[#0a1a30]/90 p-8 md:p-12 flex flex-col justify-between text-white overflow-hidden backdrop-blur-sm transition-all duration-300">
+        <div className="w-full md:w-1/2 relative bg-gradient-to-b md:bg-gradient-to-br from-[#16325C]/90 to-[#0a1a30]/90 p-4 md:p-8 flex flex-col justify-between text-white overflow-hidden backdrop-blur-sm transition-all duration-300">
 
           <div className="relative z-10">
-            <div className="flex items-center space-x-3 mb-6 md:mb-8 perspective-1000">
+            <div className="flex items-center space-x-3 mb-4 md:mb-8 perspective-1000">
               <img
                 src={soaLogo}
                 alt="Siksha 'O' Anusandhan Logo"
-                className="h-16 md:h-24 w-auto drop-shadow-2xl animate-float transition-all duration-300"
+                className="h-10 md:h-16 w-auto drop-shadow-2xl animate-float transition-all duration-300"
                 style={{
                   transformStyle: 'preserve-3d',
                   transform: 'translateZ(20px)'
@@ -84,34 +84,34 @@ const Login = () => {
               />
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-3 md:mb-4 tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 transition-all duration-300">
+            <h1 className="text-xl md:text-3xl font-extrabold leading-tight mb-1 md:mb-3 tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 transition-all duration-300">
               SIKSHA 'O' ANUSANDHAN
             </h1>
-            <p className="text-lg md:text-xl font-medium text-[#F39C12] mb-4 md:mb-6 flex items-center gap-2">
-              <span className="h-0.5 w-6 md:w-8 bg-[#F39C12]"></span>
+            <p className="text-base md:text-xl font-medium text-[#F39C12] mb-3 md:mb-6 flex items-center gap-2">
+              <span className="h-0.5 w-4 md:w-8 bg-[#F39C12]"></span>
               Deemed to be University
             </p>
 
-            <p className="text-base md:text-lg text-slate-300 max-w-md leading-relaxed hidden sm:block mt-6">
+            <p className="text-sm md:text-lg text-slate-300 max-w-md leading-relaxed hidden sm:block mt-4 md:mt-6">
               Student Library Portal. <br />
               Access your academic resources seamlessy.
             </p>
           </div>
 
-          <div className="mt-8 md:mt-12 relative z-10 hidden sm:block">
+          <div className="mt-4 md:mt-12 relative z-10 hidden sm:block">
             <div className="flex items-center gap-4">
-              <div className="h-1 w-12 bg-[#F39C12] rounded-full animate-pulse"></div>
-              <p className="text-sm font-medium text-slate-300">Institute of Technical Education and Research</p>
+              <div className="h-1 w-8 md:w-12 bg-[#F39C12] rounded-full animate-pulse"></div>
+              <p className="text-xs md:text-sm font-medium text-slate-300">Institute of Technical Education and Research</p>
             </div>
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 bg-white/5 backdrop-blur-2xl p-8 md:p-12 flex flex-col justify-center relative border-t md:border-t-0 md:border-l border-white/5 transition-all duration-300">
-          <div className="max-w-md mx-auto w-full relative z-20">
+        <div className="w-full md:w-1/2 bg-white/5 backdrop-blur-2xl p-4 md:p-8 flex flex-col justify-center relative border-t md:border-t-0 md:border-l border-white/5 transition-all duration-300 overflow-y-auto">
+          <div className="max-w-md mx-auto w-full relative z-20 py-4 md:py-0">
 
-            <div className="mb-8 md:mb-10 text-center md:text-left">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Student Portal</h2>
-              <p className="text-sm md:text-base text-slate-400">Sign in with your credentials</p>
+            <div className="mb-4 md:mb-10 text-center md:text-left">
+              <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">Student Portal</h2>
+              <p className="text-xs md:text-base text-slate-400">Sign in with your credentials</p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>

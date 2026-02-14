@@ -45,11 +45,19 @@ const PaymentSuccessModal = ({ isOpen, onClose, details }) => {
                     <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 font-mono text-sm">
                         <div className="flex justify-between items-center text-slate-400">
                             <span>Order ID</span>
-                            <span className="text-white">{details?.orderId?.substring(0, 15)}...</span>
+                            <span className="text-white">{details?.payment?.order_id ? details.payment.order_id : (details?.orderId ? details.orderId.substring(0, 15) + '...' : '—')}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-slate-400">
+                            <span>Payment ID</span>
+                            <span className="text-white">{details?.payment?.payment_id || details?.payment?.paymentId || '—'}</span>
                         </div>
                         <div className="flex justify-between items-center text-slate-400">
                             <span>Amount Paid</span>
-                            <span className="text-hack-neon font-bold">₹{details?.amount}</span>
+                            <span className="text-hack-neon font-bold">₹{details?.amount || details?.payment?.totalPaid || '—'}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-slate-400 pt-3 border-t border-white/5">
+                            <span>Verified At</span>
+                            <span className="text-white">{details?.payment?.verified_at ? new Date(details.payment.verified_at).toLocaleString() : '—'}</span>
                         </div>
                         <div className="flex justify-between items-center text-slate-400 pt-3 border-t border-white/5">
                             <span>Status</span>

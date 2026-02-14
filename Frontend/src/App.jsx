@@ -5,7 +5,7 @@ import Register from './pages/Register'
 import StudentDashboard from './pages/StudentDashboard'
 import LibrarianDashboard from './pages/LibrarianDashboard'
 import AdminDashboard from './pages/AdminDashboard'
-import PaymentDashboard from './pages/PaymentDashboard'
+// PaymentDashboard removed — payments handled via backend Razorpay integration
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -41,14 +41,7 @@ function App() {
         />
 
         <Route path="/dashboard" element={<Navigate to="/student-dashboard" replace />} />
-        <Route
-          path="/payment"
-          element={
-            <ProtectedRoute>
-              <PaymentDashboard />
-            </ProtectedRoute>
-          }
-        />
+        {/* /payment route removed; use backend payment portal or student dashboard actions */}
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

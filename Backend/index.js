@@ -427,27 +427,27 @@ app.post('/api/books', async (req, res) => {
             coverImage
         });
 
-        await newBook.save();
-        res.json({ success: true, message: 'Book added successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+                await user.save();
 
-// Delete Book (Librarian/Admin)
-app.delete('/api/books/:id', async (req, res) => {
-    try {
-        await Books.findByIdAndDelete(req.params.id);
-        res.json({ success: true, message: 'Book deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+                // Send Confirmation Email
+                if (user.email && totalPaid > 0) {
+                    sendEmail(
+                        user.email,
+                        "Fine Payment Confirmation",
+                        `Dear ${user.name},\n\nThis is to formally confirm that your fine payment of ₹${totalPaid} has been successfully received and processed.\n\nYour library account has been updated accordingly, and the related book records have been adjusted.\n\nIf you require a receipt or any further clarification, please contact the library administration.\n\nSincerely,  \nLibrary Administration`
+                    );
 
-// Issue Book (Librarian)
-app.post('/api/issue', async (req, res) => {
-    try {
-        const { regno, bookId, customDueDate } = req.body;
+                }
+
+                // Build a small payment metadata object to return to frontend
+                const paymentMeta = {
+                    totalPaid,
+                    order_id: razorpay_order_id,
+                    payment_id: razorpay_payment_id,
+                    verified_at: new Date().toISOString()
+                };
+
+                res.json({ success: true, payment: paymentMeta });
 
         const user = await Users.findOne({ regno });
         if (!user) return res.status(404).json({ error: 'Student not found' });
@@ -552,7 +552,13 @@ app.post('/api/create-order', async (req, res) => {
         };
         const order = await razorpay.orders.create(options);
         console.log(`Razorpay Order Created: ${order.id} for amount: ${order.amount}`);
-        res.json(order);
+        // Return order details along with the public key id so frontend can initialize checkout
+        res.json({
+            id: order.id,
+            amount: order.amount,
+            currency: order.currency,
+            key_id: process.env.RAZORPAY_KEY_ID
+        });
     } catch (error) {
         console.error("Order Creation Error:", error);
         res.status(500).json({ error: error.message });
