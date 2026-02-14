@@ -19,6 +19,7 @@ const LibrarianDashboard = () => {
     const [searchRegNo, setSearchRegNo] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [issueBookId, setIssueBookId] = useState('');
+    const [overdueBooks, setOverdueBooks] = useState([]);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -41,9 +42,21 @@ const LibrarianDashboard = () => {
             }
         };
 
+        const fetchOverdue = async () => {
+            try {
+                const res = await api.get('/api/overdue-books');
+                setOverdueBooks(res.data);
+            } catch (err) {
+                console.error("Failed to fetch overdue books", err);
+            }
+        };
+
         fetchStats();
         if (activeTab === 'fines') {
             fetchTransactions();
+        }
+        if (activeTab === 'overdue' || activeTab === 'dashboard') {
+            fetchOverdue();
         }
     }, [activeTab]);
 
@@ -105,6 +118,12 @@ const LibrarianDashboard = () => {
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'manage' ? 'bg-amber-600/10 text-amber-400 border border-amber-600/20 shadow-lg shadow-amber-500/5' : 'text-slate-400 hover:bg-slate-800'}`}
                     >
                         <UsersIcon className="h-5 w-5" /> Manage Issues
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('overdue')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'overdue' ? 'bg-red-600/10 text-red-400 border border-red-600/20 shadow-lg shadow-red-500/5' : 'text-slate-400 hover:bg-slate-800'}`}
+                    >
+                        <Clock className="h-5 w-5" /> Overdue Monitor
                     </button>
                     <button
                         onClick={() => setActiveTab('fines')}
@@ -320,6 +339,59 @@ const LibrarianDashboard = () => {
                                 </div>
                                 <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
                                     <TransactionHistory transactions={transactions} />
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'overdue' && (
+                            <div className="space-y-6">
+                                <div>
+                                    <h1 className="text-3xl font-bold text-white mb-2">Overdue Monitor</h1>
+                                    <p className="text-slate-400">Students with outstanding books beyond due date</p>
+                                </div>
+                                <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="bg-slate-800/50 text-slate-300 text-sm uppercase tracking-wider font-mono">
+                                                <th className="px-6 py-4">Student</th>
+                                                <th className="px-6 py-4">Book</th>
+                                                <th className="px-6 py-4">Due Date</th>
+                                                <th className="px-6 py-4 text-red-400">Fine</th>
+                                                <th className="px-6 py-4 text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-800">
+                                            {overdueBooks.map((item, idx) => (
+                                                <tr key={idx} className="hover:bg-white/5 transition-colors">
+                                                    <td className="px-6 py-4">
+                                                        <div className="font-bold text-white">{item.userName}</div>
+                                                        <div className="text-xs text-slate-500 font-mono">{item.userRegno}</div>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-slate-300">{item.bookTitle}</td>
+                                                    <td className="px-6 py-4 text-slate-400">{new Date(item.dueDate).toLocaleDateString()}</td>
+                                                    <td className="px-6 py-4 font-bold text-red-400">₹{item.fine}</td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <Button
+                                                            size="sm"
+                                                            className="bg-red-600/10 text-red-400 border border-red-600/20 hover:bg-red-600 hover:text-white"
+                                                            onClick={async () => {
+                                                                alert(`Notice sent to ${item.userEmail}`);
+                                                            }}
+                                                        >
+                                                            Send Notice
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {overdueBooks.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="5" className="px-6 py-12 text-center text-slate-500 italic">
+                                                        No overdue books found.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         )}

@@ -5,8 +5,12 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import EnhancedStatCard from '../components/EnhancedStatCard';
 import {
-    LayoutDashboard, Plus, Trash2, LogOut, BookOpen, Users, Database, Activity
+    LayoutDashboard, Plus, Trash2, LogOut, BookOpen, Users, Database, Activity, TrendingUp, DollarSign
 } from 'lucide-react';
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    PieChart, Pie, Cell, LineChart, Line
+} from 'recharts';
 import soaLogo from '../assets/soa_logo.png';
 
 const AdminDashboard = () => {
@@ -18,6 +22,8 @@ const AdminDashboard = () => {
     // Forms state
     const [newBook, setNewBook] = useState({ title: '', author: '', isbn: '', category: '', section: '', edition: '', totalCopies: 1 });
     const [newStudent, setNewStudent] = useState({ name: '', regno: '', email: '', password: '' });
+    const [analytics, setAnalytics] = useState({ categoryData: [], financialData: [], activityTrend: [] });
+    const [loadingAnalytics, setLoadingAnalytics] = useState(true);
 
     useEffect(() => {
         fetchData();
@@ -25,14 +31,18 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const [bRes, sRes] = await Promise.all([
+            const [bRes, sRes, aRes] = await Promise.all([
                 api.get('/api/books'),
-                api.get('/api/all-students')
+                api.get('/api/all-students'),
+                api.get('/api/admin/analytics')
             ]);
             setBooks(bRes.data);
             setStudents(sRes.data);
+            setAnalytics(aRes.data);
+            setLoadingAnalytics(false);
         } catch (err) {
             console.error(err);
+            setLoadingAnalytics(false);
         }
     };
 
@@ -164,6 +174,62 @@ const AdminDashboard = () => {
                                         color="cyan"
                                         subtext="Registered"
                                     />
+                                </div>
+
+                                <div className="grid lg:grid-cols-2 gap-6">
+                                    {/* Circulation Trend Chart */}
+                                    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                        <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                                            <TrendingUp className="h-5 w-5 text-purple-400" />
+                                            Circulation Trend (Last 7 Days)
+                                        </h3>
+                                        <div className="h-64">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart data={analytics.activityTrend}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                                                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} tickLine={false} />
+                                                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                                    <Tooltip
+                                                        contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                                                        itemStyle={{ color: '#fff' }}
+                                                    />
+                                                    <Legend />
+                                                    <Bar dataKey="issues" name="Issues" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                                                    <Bar dataKey="returns" name="Returns" fill="#10b981" radius={[4, 4, 0, 0]} />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+
+                                    {/* Financial Health Chart */}
+                                    <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                                        <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                                            <DollarSign className="h-5 w-5 text-green-400" />
+                                            Financial Health (Fines)
+                                        </h3>
+                                        <div className="h-64 flex items-center justify-center">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <PieChart>
+                                                    <Pie
+                                                        data={analytics.financialData}
+                                                        cx="50%"
+                                                        cy="50%"
+                                                        innerRadius={60}
+                                                        outerRadius={80}
+                                                        paddingAngle={5}
+                                                        dataKey="value"
+                                                    >
+                                                        <Cell key="cell-0" fill="#10b981" />
+                                                        <Cell key="cell-1" fill="#ef4444" />
+                                                    </Pie>
+                                                    <Tooltip
+                                                        contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                                                    />
+                                                    <Legend verticalAlign="bottom" height={36} />
+                                                </PieChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="grid lg:grid-cols-2 gap-6">

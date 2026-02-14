@@ -69,7 +69,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   }
-  
+
   .glass-neon {
     background: rgba(0, 243, 255, 0.05);
     backdrop-filter: blur(10px);
@@ -88,6 +88,13 @@ body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
 }

@@ -55,7 +55,11 @@ const RazorpayButton = ({ amount, studentData, onSuccess, className }) => {
                     try {
                         const verifyRes = await api.post('/api/verify-payment', mockPaymentData);
                         if (verifyRes.data.success) {
-                            onSuccess();
+                            onSuccess({
+                                amount,
+                                orderId: mockPaymentData.razorpay_order_id,
+                                paymentId: mockPaymentData.razorpay_payment_id
+                            });
                         } else {
                             alert("Mock Payment verification failed");
                         }
@@ -87,7 +91,11 @@ const RazorpayButton = ({ amount, studentData, onSuccess, className }) => {
                     try {
                         const verifyRes = await api.post('/api/verify-payment', data);
                         if (verifyRes.data.success) {
-                            onSuccess();
+                            onSuccess({
+                                amount,
+                                orderId: data.razorpay_order_id,
+                                paymentId: data.razorpay_payment_id
+                            });
                         } else {
                             alert("Payment verification failed");
                         }

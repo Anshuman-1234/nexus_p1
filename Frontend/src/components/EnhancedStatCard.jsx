@@ -85,8 +85,8 @@ const EnhancedStatCard = ({
                     <div className="flex items-center gap-2 pt-3 border-t border-slate-700/50">
                         {getTrendIcon()}
                         <span className={`text-xs font-medium ${trend === 'up' ? 'text-green-400' :
-                                trend === 'down' ? 'text-red-400' :
-                                    'text-slate-400'
+                            trend === 'down' ? 'text-red-400' :
+                                'text-slate-400'
                             }`}>
                             {trendValue}
                         </span>

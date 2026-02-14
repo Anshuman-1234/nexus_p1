@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import RazorpayButton from '../components/RazorpayButton';
+import PaymentSuccessModal from '../components/PaymentSuccessModal';
 import { useScrollAnimations } from '../hooks/useScrollAnimations';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,6 +14,8 @@ const PaymentDashboard = () => {
     const [studentData, setStudentData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [totalFine, setTotalFine] = useState(0);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [paymentDetails, setPaymentDetails] = useState(null);
 
     const containerRef = useRef(null);
     const heroRef = useRef(null);
@@ -123,10 +126,19 @@ const PaymentDashboard = () => {
                         <RazorpayButton
                             amount={totalFine}
                             studentData={studentData}
-                            onSuccess={() => window.location.reload()}
+                            onSuccess={(details) => {
+                                setPaymentDetails(details);
+                                setShowSuccess(true);
+                            }}
                         />
                     </div>
                 </section>
+
+                <PaymentSuccessModal
+                    isOpen={showSuccess}
+                    details={paymentDetails}
+                    onClose={() => window.location.reload()}
+                />
 
                 {/* STATS OVERVIEW */}
                 <section ref={statsRef} className="py-32 grid grid-cols-1 md:grid-cols-3 gap-8">
