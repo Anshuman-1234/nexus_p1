@@ -186,8 +186,12 @@ app.post('/login', async (req, res) => {
         res.json({ success: true, user: { name: user.name, role: user.role, regno: user.regno, email: user.email } });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Server error' });
+        console.error("Detailed Login Error:", err);
+        res.status(500).json({
+            error: 'Server error',
+            details: err.message,
+            envSet: !!process.env.MONGO_URI
+        });
     }
 });
 
