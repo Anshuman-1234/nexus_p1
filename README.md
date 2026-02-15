@@ -114,4 +114,4 @@ The built-in `node-cron` in `Backend/index.js` will not run on Vercel because se
 This project is developed for Siksha 'O' Anusandhan. All rights reserved.
 
 ---
-Developed with ❤️ by Anshuman Barik.
+Developed with ❤️ by Nexus-E4
