@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button.jsx';
 import { Input } from '../components/ui/Input.jsx';
 import EnhancedStatCard from '../components/EnhancedStatCard.jsx';
 import {
-    LayoutDashboard, Plus, Trash2, LogOut, BookOpen, Users, Database, Activity, TrendingUp, DollarSign, FileDown
+    LayoutDashboard, Plus, Trash2, LogOut, BookOpen, Users, Database, Activity, TrendingUp, DollarSign, FileDown, Settings
 } from 'lucide-react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
