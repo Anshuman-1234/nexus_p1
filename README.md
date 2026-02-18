@@ -115,3 +115,9 @@ This project is developed for Siksha 'O' Anusandhan. All rights reserved.
 
 ---
 Developed with ❤️ by Nexus-E4
+---
+Technical Contributors:
+1) Anshuman Barik (Backend Developer)
+2) Piyush Tiwari  (Backend Developer)
+3) Siddhant Jena  (Frontend Developer)
+ 
