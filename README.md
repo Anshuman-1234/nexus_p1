@@ -116,13 +116,16 @@ This project is developed for Siksha 'O' Anusandhan. All rights reserved.
 ---
 Developed with ❤️ by Nexus-E4
 ---
-Technical Contributors:
+##Technical Contributors:
+
 1) Anshuman Barik (Backend Developer)
 2) Piyush Tiwari  (Backend Developer)
 3) Siddhant Jena  (Frontend Developer)
 
-****Related URL :
-*Vercel Deployment URL of SOA Library Information Management System:
+##Related URL :
+
+###Vercel Deployment URL of SOA Library Information Management System:
 https://nexus-p1.vercel.app/
-*APK URL of SOA Library Information Management System:
+
+###APK URL of SOA Library Information Management System:
 https://drive.google.com/file/d/1t7QJjU9M83p6iYZgev2vf_CHcU5jNOJi/view?usp=drivesdk
