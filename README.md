@@ -121,6 +121,8 @@ Technical Contributors:
 2) Piyush Tiwari  (Backend Developer)
 3) Siddhant Jena  (Frontend Developer)
 
-APK URL of SOA Library Information Management System:
-https://drive.google.com/file/d/1t7QJjU9M83p6iYZgev2vf_CHcU5jNOJi/view?usp=drivesdk
- 
+****Related URL :
+*Vercel Deployment URL of SOA Library Information Management System:
+https://nexus-p1.vercel.app/
+*APK URL of SOA Library Information Management System:
+https://drive.google.com/file/d/1t7QJjU9M83p6iYZgev2vf_CHcU5jNOJi/view?usp=drivesdk
